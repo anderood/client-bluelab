@@ -1,5 +1,11 @@
+import { Home } from "./screens/Home";
+import { Register } from "./screens/Register";
+
 export function App() {
   return (
-    <h1>Ola</h1>
+    <div style={{display: "flex"}}>
+      <Home />
+      <Register />
+    </div>
   );
 }
