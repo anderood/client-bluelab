@@ -1,49 +1,35 @@
 import React from "react";
 
-import { 
-    Container, 
-    Form, 
-    Title, 
-    FormContainer, 
-    ContainerName, 
-    ContainerSobrenome, 
-    ContainerCPF, 
-    ContainerPhone,
-    Label,
-    Input,
-    Button
-
-
-} from "../Register/styles";
+import { Container, Form } from "../Register/styles";
 
 export function Register(){
     return(
         <Container>
-            <Form action="">
+            <Form >
 
-                <FormContainer>
-                <Title>Cadastro de Usuarios</Title>
-                    <ContainerName>
-                        <Label htmlFor="">Nome</Label>
-                        <Input type="text" />
-                    </ContainerName>
+                <div>
+                    <h1>Cadastro de Usuarios</h1>
+                    <div>
+                        <label htmlFor="">Nome</label>
+                        <input type="text" />
+                    </div>
 
-                    <ContainerSobrenome>
-                        <Label htmlFor="">Sobrenome</Label>
-                        <Input type="text" />
-                    </ContainerSobrenome>
+                    <div>
+                        <label htmlFor="">Sobrenome</label>
+                        <input type="text" />
+                    </div>
 
-                    <ContainerCPF>
-                        <Label htmlFor="">CPF</Label>
-                        <Input type="text" />
-                    </ContainerCPF>
+                    <div>
+                        <label htmlFor="">CPF</label>
+                        <input type="text" />
+                    </div>
 
-                    <ContainerPhone>
-                        <Label htmlFor="">Telefone</Label>
-                        <Input type="text" />
-                    </ContainerPhone>
-                    <Button>Cadastrar</Button>
-                </FormContainer>
+                    <div>
+                        <label htmlFor="">Telefone</label>
+                        <input type="text" />
+                    </div>
+                    <button>Cadastrar</button>
+                </div>
 
             </Form>
         </Container>
