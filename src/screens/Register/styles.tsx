@@ -5,7 +5,7 @@ export const Container = styled.div`
     width: 80%;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
    
     border: 1px solid black;
     width: 600px;

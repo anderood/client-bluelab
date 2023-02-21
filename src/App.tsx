@@ -8,13 +8,6 @@ import GlobalStyle from "./theme/globalStyles";
 export function App() {
   return (
 
-    <>
-      <GlobalStyle />
-      <div style={{ display: "flex"}}>
-
-        <Home />
-        <Users></Users>
-      </div>
-    </>
+    <Register/>
   );
 }
