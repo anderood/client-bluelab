@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../services/api";
 
-import { Container } from "../Users/styles";
+import { Container, Search } from "../Users/styles";
 
 interface UsersProps{
     id: string;
@@ -11,6 +11,7 @@ interface UsersProps{
     phone: string;
 }
 
+
 export function Users(){
 
 
@@ -19,10 +20,11 @@ export function Users(){
     const [ lastName, setLastName ] = useState("")
     const [ cpf, setCpf ] = useState("")
     const [ phone, setPhone ] = useState("")
+    const [ search, setSearch ] = useState("")
 
     useEffect(() => {
         api.get("/users").then(response => response.data).then((data) => setUserList(data))
-    }, [])
+    }, [search])
 
     function handleUpdateUser(id: string){
         
@@ -43,15 +45,28 @@ export function Users(){
     function handDeleteAccount(id: string){
         
 
-        api.delete(`/user/${id}x`,)
+        api.delete(`/user/${id}`)
             .then(response => console.log(response))
             .catch(response => alert(response.response.data.msg))
+    }
+
+    function handleSearch(){
+        
+      
+        api.get("/search", { params: {cpf: search}} )
+         .then(response => response.data).then((data) => setUserList(data.dataUser))
+         .catch(response => alert(response.response.data.msg))
+       
     }
 
     return(
         <Container>
             <div>
                 <h1>Lista de Usuários</h1>
+                <Search>
+                    <input type="text" placeholder="Pesquise por CPF" onChange={(event) => setSearch(event.target.value)}/>
+                    <button onClick={handleSearch}>Pesquisar</button>
+                </Search>
                 <table>
                     <thead>
                         <tr>
@@ -93,9 +108,10 @@ export function Users(){
                                             onChange={(event) => setPhone(event.target.value)}
                                         />
                                     </td>
-                                   
-                                    <button onClick={()=> handleUpdateUser(user.id)}>Salvar</button>
-                                    <button onClick={()=> handDeleteAccount(user.id)}>Deletar</button>
+                                   <td>
+                                        <button onClick={()=> handleUpdateUser(user.id)}>Salvar</button>
+                                        <button onClick={()=> handDeleteAccount(user.id)}>Deletar</button>
+                                   </td>
                                 </tr>
                             ))
                         }

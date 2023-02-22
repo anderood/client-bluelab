@@ -8,6 +8,8 @@ import GlobalStyle from "./theme/globalStyles";
 export function App() {
   return (
     <>
+      <GlobalStyle/>
+      <Home/>
       <Users/>
     </>
   );
