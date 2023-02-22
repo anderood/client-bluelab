@@ -42,7 +42,10 @@ export function Users(){
 
     function handDeleteAccount(id: string){
         
-        console.log(userList)
+
+        api.delete(`/user/${id}x`,)
+            .then(response => console.log(response))
+            .catch(response => alert(response.response.data.msg))
     }
 
     return(
