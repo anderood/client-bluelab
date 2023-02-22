@@ -7,7 +7,8 @@ import GlobalStyle from "./theme/globalStyles";
 
 export function App() {
   return (
-
-    <Register/>
+    <>
+      <Users/>
+    </>
   );
 }
