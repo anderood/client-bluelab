@@ -11,7 +11,7 @@ export function App() {
     <>
       <GlobalStyle/>
       <div style={{display: "flex", flexDirection: "row"}}>
-        <Home/>
+        {/* <Home/> */}
         <Chat/>
       </div>
     </>
