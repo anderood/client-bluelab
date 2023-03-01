@@ -16,6 +16,7 @@ export function Chat(){
     const [selectUser, setSelectUser ] = useState('all');
     const [ isAcess, setIsAcess ] = useState(false);
     const [ msg, setMsg ] = useState('');
+    const [ msgPrv, setMsgPrv ] = useState('');
 
     const socket = io('http://localhost:3333/');
 
@@ -32,15 +33,28 @@ export function Chat(){
     function handleSendMsg(event: any){
 
         event.preventDefault();
+        
+        if(selectUser !== "all" ){
 
-        if(selectUser != "all" ){
+            const data = {
+                id: selectUser,
+                room: ['private'],
+                textmsg: msg
+            }
             
-            socket.on("connect", () => {
-                console.log(msg)
-            })
+            socket.emit('chat-private', data)
+            setMsg('')
+            
 
         }else {
-            alert('teste')
+            const data = {
+                id: selectUser,
+                room: ['no-private'],
+                textmsg: msg
+            }
+
+            socket.emit('chatAll', data)
+            setMsg('')
         }
     }
 
@@ -77,7 +91,7 @@ export function Chat(){
                        <option value="all">Todos</option>
                       {
                           dataUser.map((item, idx) => {
-                              if(item.id != selectValue){
+                              if(item.id !== selectValue){
                                   return(
                                     <option 
                                         key={idx}
@@ -91,7 +105,7 @@ export function Chat(){
                 </div>
                 <form action="">
                     <ul>
-                        <li>Texto de Mensagem</li>
+                       { msg}
                     </ul>
                     <input type="text" value={msg} placeholder="Digite a sua mensagem..." onChange={(event) => setMsg(event.target.value)}/>
                     <button onClick={(event) => handleSendMsg(event)}>Enviar</button>
