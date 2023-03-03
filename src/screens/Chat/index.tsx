@@ -7,22 +7,36 @@ interface dataUser{
     id: string;
     first_name: string;
     last_name: string;
+    message: string;
+    created_at: string;
 }
 
 export function Chat(){
 
-    const [dataUser, setDataUser ] = useState<dataUser[]>([]);
-    const [selectValue, setSelectValue ] = useState('');
-    const [selectUser, setSelectUser ] = useState('all');
+    const [ dataUser, setDataUser ] = useState<dataUser[]>([]);
+    const [ selectValue, setSelectValue ] = useState('');
+    const [ selectUser, setSelectUser ] = useState('all');
     const [ isAcess, setIsAcess ] = useState(false);
-    const [ msg, setMsg ] = useState('');
-    const [ msgPrv, setMsgPrv ] = useState('');
+    const [ textMsg, setTextMsg ] = useState('');
+    const [ historyMessage, setHistoryMessage ] = useState([]);
 
     const socket = io('http://localhost:3333/');
+
+    
 
     useEffect(()=> {
         api.get("/users").then(response => setDataUser(response.data));
     }, [])
+
+    useEffect(()=> {
+
+        socket.on('chat-private', (data) => {
+            setHistoryMessage(data)
+        })
+
+    }, [historyMessage])
+
+    
 
     function handleClick(event: any){
 
@@ -33,29 +47,17 @@ export function Chat(){
     function handleSendMsg(event: any){
 
         event.preventDefault();
-        
-        if(selectUser !== "all" ){
 
-            const data = {
-                id: selectUser,
-                room: ['private'],
-                textmsg: msg
-            }
-            
-            socket.emit('chat-private', data)
-            setMsg('')
-            
-
-        }else {
-            const data = {
-                id: selectUser,
-                room: ['no-private'],
-                textmsg: msg
-            }
-
-            socket.emit('chatAll', data)
-            setMsg('')
+        const data = {
+            id: selectUser,
+            room: ['chat-private'],
+            message: textMsg
         }
+        
+        //Evento q envia as mensagem para o servidor
+        socket.emit('chat-private', data);
+        setTextMsg('');
+        
     }
 
     return(
@@ -105,9 +107,27 @@ export function Chat(){
                 </div>
                 <form action="">
                     <ul>
-                       { msg}
+                      {
+
+                          historyMessage.map(item => {
+                              const options = {
+                                year: 'numeric', month: 'numeric', day: 'numeric',
+                                hour: 'numeric', minute: 'numeric', second: 'numeric',
+                                hour12: false,
+                                timeZone: 'America/Sao_Paulo'
+                              }
+
+                              return(
+                                <li> 
+                                    <span>{ new Intl.DateTimeFormat('pt-BR', options ).format(new Date(item.created_at))} - </span> 
+                                    <span>{item.first_name}: </span>
+                                        {item.message}
+                                </li>
+                              );
+                          })
+                      }
                     </ul>
-                    <input type="text" value={msg} placeholder="Digite a sua mensagem..." onChange={(event) => setMsg(event.target.value)}/>
+                    <input type="text" value={textMsg} placeholder="Digite a sua mensagem..." onChange={(event) => setTextMsg(event.target.value)}/>
                     <button onClick={(event) => handleSendMsg(event)}>Enviar</button>
                 </form>
             </div>
