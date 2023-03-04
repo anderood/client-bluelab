@@ -17,8 +17,8 @@ export function Chat(){
     const [ selectValue, setSelectValue ] = useState('');
     const [ selectUser, setSelectUser ] = useState('all');
     const [ isAcess, setIsAcess ] = useState(false);
-    const [ textMsg, setTextMsg ] = useState('');
-    const [ historyMessage, setHistoryMessage ] = useState([]);
+    const [ message, setMessage ] = useState('');
+    const [ messages, setMessages ] = useState<string[]>([]);
 
     const socket = io('http://localhost:3333/');
 
@@ -30,11 +30,11 @@ export function Chat(){
 
     useEffect(()=> {
 
-        socket.on('chat-private', (data) => {
-            setHistoryMessage(data)
+        socket.on('chat-private', (message) => {
+            setMessages((messages) => [...messages, message])
         })
 
-    }, [historyMessage])
+    }, [])
 
     
 
@@ -48,15 +48,8 @@ export function Chat(){
 
         event.preventDefault();
 
-        const data = {
-            id: selectUser,
-            room: ['chat-private'],
-            message: textMsg
-        }
-        
-        //Evento q envia as mensagem para o servidor
-        socket.emit('chat-private', data);
-        setTextMsg('');
+        socket.emit('chat-private', message);
+        setMessage('');
         
     }
 
@@ -107,27 +100,11 @@ export function Chat(){
                 </div>
                 <form action="">
                     <ul>
-                      {
-
-                          historyMessage.map(item => {
-                              const options = {
-                                year: 'numeric', month: 'numeric', day: 'numeric',
-                                hour: 'numeric', minute: 'numeric', second: 'numeric',
-                                hour12: false,
-                                timeZone: 'America/Sao_Paulo'
-                              }
-
-                              return(
-                                <li> 
-                                    <span>{ new Intl.DateTimeFormat('pt-BR', options ).format(new Date(item.created_at))} - </span> 
-                                    <span>{item.first_name}: </span>
-                                        {item.message}
-                                </li>
-                              );
-                          })
-                      }
+                      {messages.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                      ))}
                     </ul>
-                    <input type="text" value={textMsg} placeholder="Digite a sua mensagem..." onChange={(event) => setTextMsg(event.target.value)}/>
+                    <input type="text" value={message} placeholder="Digite a sua mensagem..." onChange={(event) => setMessage(event.target.value)}/>
                     <button onClick={(event) => handleSendMsg(event)}>Enviar</button>
                 </form>
             </div>
