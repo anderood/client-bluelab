@@ -30,8 +30,9 @@ export function Chat(){
 
     useEffect(()=> {
 
-        socket.on('chatx', (message) => {
-            setMessages(message)
+        socket.on('chatx', (data) => {
+            setMessages(data)
+            console.log(messages)
         })
 
     }, [message])
@@ -48,9 +49,16 @@ export function Chat(){
 
         event.preventDefault();
 
-        socket.emit('chat', message);
+        socket.emit('chat', {
+            id: selectValue,
+            text: message
+        });
         setMessage('');
-        
+    }
+
+    function FormatDate(date){
+        return new Intl.DateTimeFormat('pt-BR', { dateStyle: "short", timeStyle:'short'}).format(new Date(date))
+
     }
 
     return(
@@ -99,10 +107,13 @@ export function Chat(){
                    </select>
                 </div>
                 <form action="">
-                    <ul>
                       {messages.map((item, idx) => (
-                          <li key={idx}>{item}</li>
+                          <div style={ {background: 'white', padding: '10px 10px'}} 
+                            key={idx}>
+                              {FormatDate(item.created_at)}{' '}<strong>{item.username}</strong>:{item.text}
+                          </div>
                       ))}
+                    <ul >
                     </ul>
                     <input 
                         type="text" 
