@@ -30,11 +30,11 @@ export function Chat(){
 
     useEffect(()=> {
 
-        socket.on('chat-private', (message) => {
-            setMessages((messages) => [...messages, message])
+        socket.on('chatx', (message) => {
+            setMessages(message)
         })
 
-    }, [])
+    }, [message])
 
     
 
@@ -48,7 +48,7 @@ export function Chat(){
 
         event.preventDefault();
 
-        socket.emit('chat-private', message);
+        socket.emit('chat', message);
         setMessage('');
         
     }
@@ -104,7 +104,12 @@ export function Chat(){
                           <li key={idx}>{item}</li>
                       ))}
                     </ul>
-                    <input type="text" value={message} placeholder="Digite a sua mensagem..." onChange={(event) => setMessage(event.target.value)}/>
+                    <input 
+                        type="text" 
+                        value={message} 
+                        placeholder="Digite a sua mensagem..." 
+                        onChange={(event) => setMessage(event.target.value)}
+                    />
                     <button onClick={(event) => handleSendMsg(event)}>Enviar</button>
                 </form>
             </div>
